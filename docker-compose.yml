@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+  app1:
+    image: "elixir:1.13.4"
+    container_name: app1
+    hostname: app1
+    networks:
+      - "live-net"
+    environment:
+      ERLANG_COOKIE: "leruaite_secret"
+    volumes:
+      - ./app1/lib/script.exs:/app.exs
+    command: ["bash", "-c", "elixir --no-halt --sname app@app1 --cookie $$ERLANG_COOKIE app.exs"]
+    # command: ["bash", "-c", "sleep infinity"]
+
+  app2:
+    image: "elixir:1.13.4"
+    container_name: app2
+    hostname: app2
+    networks:
+      - "live-net"
+    environment:
+      ERLANG_COOKIE: "leruaite_secret"
+    volumes:
+      - ./app2/lib/script.exs:/app.exs
+    command: ["bash", "-c", "elixir --no-halt --sname app@app2 --cookie $$ERLANG_COOKIE app.exs"]
+
+
+  livebook:
+    image: 'livebook/livebook:0.6.3' 
+    container_name: livebook
+    hostname: livebook
+    ports:
+      - '8432:8432'
+    networks:
+      - "live-net"
+    environment:
+      LIVEBOOK_COOKIE: "leruaite_secret"
+      LIVEBOOK_TOKEN_ENABLED: "true"
+      LIVEBOOK_PASSWORD: "leruaite_password"
+      LIVEBOOK_DEFAULT_RUNTIME: "attached:NODE:COOKIE" #resolve
+      LIVEBOOK_DATA_PATH: "livebook"
+      LIVEBOOK_PORT: 8432
+    restart: always
+    volumes:
+      - './livebook/data:/data'
+      - './livebook/path:/livebook'
+
+  db:
+    image: 'postgres:13.0-alpine' 
+    container_name: livedb
+    hostname: livedb
+    ports:
+      - '8433:5432'
+    networks:
+      - "live-net"
+    restart: always
+    environment:
+      POSTGRES_HOST: livedb
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: livebook
+      PGDATA: /tmp
+    volumes:
+      - './postgres/data:/var/lib/postgresql/data'
+
+
+networks:
+  live-net:
+    name: live-net
+    driver: bridge
