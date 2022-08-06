@@ -38,13 +38,11 @@ services:
       LIVEBOOK_COOKIE: "leruaite_secret"
       LIVEBOOK_TOKEN_ENABLED: "true"
       LIVEBOOK_PASSWORD: "leruaite_password"
-      LIVEBOOK_DEFAULT_RUNTIME: "attached:NODE:COOKIE" #resolve
-      LIVEBOOK_DATA_PATH: "livebook"
+      #LIVEBOOK_DEFAULT_RUNTIME: "attached:NODE:COOKIE" #resolve
       LIVEBOOK_PORT: 8432
     restart: always
     volumes:
       - './livebook/data:/data'
-      - './livebook/path:/livebook'
 
   db:
     image: 'postgres:13.0-alpine' 
