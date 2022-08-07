@@ -10,13 +10,11 @@ RUN mix local.hex --force \
   && apt-get install -y inotify-tools \
   && mix local.rebar --force
 
+
 ENV APP_HOME /app
 RUN mkdir -p $APP_HOME
 WORKDIR $APP_HOME
 
 EXPOSE 5000
 
-# RUN  iex --sname broker --cookie leruaite_secret -S mix
-
 CMD ["mix", "phx.server"]
-# CMD ["iex", "--name", "broker@broker", "--cookie", "leruaite_secret", "-S", "mix", "phx.server"]
