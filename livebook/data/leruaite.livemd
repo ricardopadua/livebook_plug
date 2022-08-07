@@ -1,0 +1,151 @@
+<!-- livebook:{"persist_outputs":true} -->
+
+# Livebook Plug
+
+## Design Docs
+
+criei essa poc onde um node se conecta a outro, dessa forma ele passa a ter acesso a todo o contexto do app do node conectado, possibilitando de maneira pratica documentar e exemplicar códigos mais complexos de uma aplicação elixir, isso se mostra ideal em ambientes de desenvolvimento e staging, geração de mocks entre outras possibilidades.
+
+<!-- livebook:{"break_markdown":true} -->
+
+como exemplo fiz um simples select em um contexto de Persons criado em uma aplicação Phoenix
+
+```elixir
+Broker.Repo.get!(Broker.Persons.Person, 1)
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+[debug] QUERY OK source="persons" db=71.0ms decode=18.4ms queue=3.1ms idle=1307.8ms
+SELECT p0."id", p0."description", p0."name", p0."inserted_at", p0."updated_at" FROM "persons" AS p0 WHERE (p0."id" = $1) [1]
+↳ :erl_eval.do_apply/6, at: erl_eval.erl:685
+
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+%Broker.Persons.Person{
+  __meta__: #Ecto.Schema.Metadata<:loaded, "persons">,
+  description: "pai do Chico",
+  id: 1,
+  inserted_at: ~N[2022-08-07 03:15:44],
+  name: "Bode Brinco",
+  updated_at: ~N[2022-08-07 03:42:24]
+}
+```
+
+é importante entender que caso não existe um node criado com o nome definido no host de destino, não será possível conectar.
+
+<!-- livebook:{"break_markdown":true} -->
+
+````
+version: "3.8"
+services:
+  broker:
+    container_name: broker
+    build: ./broker/
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./broker:/app
+    hostname: broker
+    networks:
+      - "live-net"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: livedb
+      ERLANG_COOKIE: "leruaite_secret"
+  livebook:
+    image: 'livebook/livebook:0.6.3' 
+    container_name: livebook
+    hostname: livebook
+    ports:
+      - '8432:8432'
+    networks:
+      - "live-net"
+    environment:
+      LIVEBOOK_COOKIE: "leruaite_secret"
+      LIVEBOOK_TOKEN_ENABLED: "true"
+      LIVEBOOK_PASSWORD: "leruaitepassword"
+      LIVEBOOK_DEFAULT_RUNTIME: "attached:broker@broker:leruaite_secret"
+      LIVEBOOK_PORT: 8432
+    restart: always
+    volumes:
+      - './livebook/data:/data'
+
+  db:
+    image: 'postgres:13.0-alpine' 
+    container_name: livedb
+    hostname: livedb
+    ports:
+      - '5432:5432'
+    networks:
+      - "live-net"
+    restart: always
+    environment:
+      POSTGRES_HOST: livedb
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: broker
+      PGDATA: /tmp
+    volumes:
+      - './postgres/data:/var/lib/postgresql/data'
+
+
+networks:
+  live-net:
+    name: live-net
+    driver: bridge
+    ```
+````
+
+<!-- livebook:{"break_markdown":true} -->
+
+````
+FROM elixir:1.13.4
+
+RUN mix local.hex --force \
+  && mix archive.install --force hex phx_new 1.6.11 \
+  && apt-get update \
+  && curl -sL https://deb.nodesource.com/setup_16.x | bash \
+  && apt-get install -y apt-utils \
+  && apt-get install -y nodejs \
+  && apt-get install -y build-essential \
+  && apt-get install -y inotify-tools \
+  && mix local.rebar --force
+
+ENV APP_HOME /app
+RUN mkdir -p $APP_HOME
+WORKDIR $APP_HOME
+
+EXPOSE 5000
+
+CMD ["mix", "phx.server"]
+```
+````
+
+<!-- livebook:{"break_markdown":true} -->
+
+```
+docker-compose up --build -d
+docker exec -it broker iex --name broker@broker --cookie leruaite_secret -S mix
+```
+
+<!-- livebook:{"break_markdown":true} -->
+
+Observe que essa configuração é somente para exemplo e ajustes de segurança deverão ser feitos para que seja viavel rodar em ambientes de maneira segura, quando possível leia a documentação do livebook e sempre coloque suas variaveis de ambiente em um .env ou vault.
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/Captura%20de%20Tela%202022-08-07%20a%CC%80s%2000.42.46.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+![](images/Captura%20de%20Tela%202022-08-07%20a%CC%80s%2000.43.12.png)
+
+<!-- livebook:{"break_markdown":true} -->
+
+também é possível salvar de maneira automagica essa documentação no repositório desejado.
