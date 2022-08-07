@@ -1,31 +1,21 @@
 version: "3.7"
 services:
-  app1:
-    image: "elixir:1.13.4"
-    container_name: app1
-    hostname: app1
+  broker:
+    container_name: broker
+    build: ./broker/
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./broker:/app
+    hostname: broker
     networks:
       - "live-net"
     environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_HOST: livedb
       ERLANG_COOKIE: "leruaite_secret"
-    volumes:
-      - ./app1/lib/script.exs:/app.exs
-    command: ["bash", "-c", "elixir --no-halt --sname app@app1 --cookie $$ERLANG_COOKIE app.exs"]
-    # command: ["bash", "-c", "sleep infinity"]
-
-  app2:
-    image: "elixir:1.13.4"
-    container_name: app2
-    hostname: app2
-    networks:
-      - "live-net"
-    environment:
-      ERLANG_COOKIE: "leruaite_secret"
-    volumes:
-      - ./app2/lib/script.exs:/app.exs
-    command: ["bash", "-c", "elixir --no-halt --sname app@app2 --cookie $$ERLANG_COOKIE app.exs"]
-
-
+    # command: ["bash", "-c", "iex --name broker@broker --cookie leruaite_secret -S mix"]
   livebook:
     image: 'livebook/livebook:0.6.3' 
     container_name: livebook
@@ -37,8 +27,8 @@ services:
     environment:
       LIVEBOOK_COOKIE: "leruaite_secret"
       LIVEBOOK_TOKEN_ENABLED: "true"
-      LIVEBOOK_PASSWORD: "leruaite_password"
-      #LIVEBOOK_DEFAULT_RUNTIME: "attached:NODE:COOKIE" #resolve
+      LIVEBOOK_PASSWORD: "leruaitepassword"
+      LIVEBOOK_DEFAULT_RUNTIME: "attached:broker@broker:leruaite_secret"
       LIVEBOOK_PORT: 8432
     restart: always
     volumes:
@@ -49,7 +39,7 @@ services:
     container_name: livedb
     hostname: livedb
     ports:
-      - '8433:5432'
+      - '5432:5432'
     networks:
       - "live-net"
     restart: always
@@ -57,7 +47,7 @@ services:
       POSTGRES_HOST: livedb
       POSTGRES_PASSWORD: postgres
       POSTGRES_USER: postgres
-      POSTGRES_DB: livebook
+      POSTGRES_DB: broker
       PGDATA: /tmp
     volumes:
       - './postgres/data:/var/lib/postgresql/data'
