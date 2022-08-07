@@ -16,5 +16,7 @@ WORKDIR $APP_HOME
 
 EXPOSE 5000
 
-# CMD ["mix", "phx.server"]
-CMD ["iex", "--name", "broker@broker", "--cookie", "leruaite_secret", "-S", "mix", "phx.server"]
+# RUN  iex --sname broker --cookie leruaite_secret -S mix
+
+CMD ["mix", "phx.server"]
+# CMD ["iex", "--name", "broker@broker", "--cookie", "leruaite_secret", "-S", "mix", "phx.server"]

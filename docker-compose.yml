@@ -15,7 +15,6 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: livedb
       ERLANG_COOKIE: "leruaite_secret"
-    # command: ["bash", "-c", "iex --name broker@broker --cookie leruaite_secret -S mix"]
   livebook:
     image: 'livebook/livebook:0.6.3' 
     container_name: livebook
