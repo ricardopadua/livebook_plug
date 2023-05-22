@@ -6,12 +6,12 @@ defmodule BrokerWeb.PersonController do
 
   def index(conn, _params) do
     persons = Persons.list_persons()
-    render(conn, "index.html", persons: persons)
+    render(conn, :index, persons: persons)
   end
 
   def new(conn, _params) do
     changeset = Persons.change_person(%Person{})
-    render(conn, "new.html", changeset: changeset)
+    render(conn, :new, changeset: changeset)
   end
 
   def create(conn, %{"person" => person_params}) do
@@ -19,22 +19,22 @@ defmodule BrokerWeb.PersonController do
       {:ok, person} ->
         conn
         |> put_flash(:info, "Person created successfully.")
-        |> redirect(to: Routes.person_path(conn, :show, person))
+        |> redirect(to: ~p"/persons/#{person}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, :new, changeset: changeset)
     end
   end
 
   def show(conn, %{"id" => id}) do
     person = Persons.get_person!(id)
-    render(conn, "show.html", person: person)
+    render(conn, :show, person: person)
   end
 
   def edit(conn, %{"id" => id}) do
     person = Persons.get_person!(id)
     changeset = Persons.change_person(person)
-    render(conn, "edit.html", person: person, changeset: changeset)
+    render(conn, :edit, person: person, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "person" => person_params}) do
@@ -44,10 +44,10 @@ defmodule BrokerWeb.PersonController do
       {:ok, person} ->
         conn
         |> put_flash(:info, "Person updated successfully.")
-        |> redirect(to: Routes.person_path(conn, :show, person))
+        |> redirect(to: ~p"/persons/#{person}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", person: person, changeset: changeset)
+        render(conn, :edit, person: person, changeset: changeset)
     end
   end
 
@@ -57,6 +57,6 @@ defmodule BrokerWeb.PersonController do
 
     conn
     |> put_flash(:info, "Person deleted successfully.")
-    |> redirect(to: Routes.person_path(conn, :index))
+    |> redirect(to: ~p"/persons")
   end
 end

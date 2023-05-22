@@ -2,13 +2,29 @@
 
 # Livebook Plug
 
-## Design Docs
+## What is livebook ?
 
-criei essa poc onde um node se conecta a outro, dessa forma ele passa a ter acesso a todo o contexto do app do node conectado, possibilitando de maneira pratica documentar e exemplicar códigos mais complexos de uma aplicação elixir, isso se mostra ideal em ambientes de desenvolvimento e staging, geração de mocks entre outras possibilidades.
+Livebook is an amazing tools in elixir, your purpose is to create interactive documents and also write, execute and explain code elixir in document like a jupyter notebook for python, this document could share with other developers for interactive together, the livebook supports tables, graphics, text formating and other ways to visualization data, now that we explain a little bit about what is livebook we gonna  think one application elixir that is running in other host, wouldn't it be pretty good if we could execute this application in that livebook ? this is possible if we connecting node that livebook in node that application.
+
+## What is node in Elixir ?
+
+Elixir code after compiled it run in the Erlang Virtual Machine (BEAM), elixir takes advantage of BEAM features. That said, node in erlang is a running instance of Erlang runtime environment that enables creation and commnunication of processes in a distributed system, for identify the current node in a distributed system, execute node.self you could see more about node in [docs](https://hexdocs.pm/elixir/1.12/Node.html)
+
+```elixir
+Node.self()
+```
+
+<!-- livebook:{"output":true} -->
+
+```
+:broker@broker
+```
+
+como exemplo fiz um simples select em um contexto de Persons criado em uma aplicação Phoenix
 
 <!-- livebook:{"break_markdown":true} -->
 
-como exemplo fiz um simples select em um contexto de Persons criado em uma aplicação Phoenix
+![](images/erlang_node.png)
 
 ```elixir
 Broker.Repo.get!(Broker.Persons.Person, 1)
@@ -17,22 +33,13 @@ Broker.Repo.get!(Broker.Persons.Person, 1)
 <!-- livebook:{"output":true} -->
 
 ```
-[debug] QUERY OK source="persons" db=71.0ms decode=18.4ms queue=3.1ms idle=1307.8ms
-SELECT p0."id", p0."description", p0."name", p0."inserted_at", p0."updated_at" FROM "persons" AS p0 WHERE (p0."id" = $1) [1]
-↳ :erl_eval.do_apply/6, at: erl_eval.erl:685
-
-```
-
-<!-- livebook:{"output":true} -->
-
-```
 %Broker.Persons.Person{
   __meta__: #Ecto.Schema.Metadata<:loaded, "persons">,
-  description: "pai do Chico",
   id: 1,
-  inserted_at: ~N[2022-08-07 03:15:44],
-  name: "Bode Brinco",
-  updated_at: ~N[2022-08-07 03:42:24]
+  description: "owner",
+  name: "Lara ",
+  inserted_at: ~N[2023-05-20 14:53:42],
+  updated_at: ~N[2023-05-20 14:53:42]
 }
 ```
 

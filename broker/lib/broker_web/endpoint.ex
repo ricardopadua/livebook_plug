@@ -7,7 +7,8 @@ defmodule BrokerWeb.Endpoint do
   @session_options [
     store: :cookie,
     key: "_broker_key",
-    signing_salt: "hKlJvyAU"
+    signing_salt: "ndNWGKfh",
+    same_site: "Lax"
   ]
 
   socket "/live", Phoenix.LiveView.Socket, websocket: [connect_info: [session: @session_options]]
@@ -20,7 +21,7 @@ defmodule BrokerWeb.Endpoint do
     at: "/",
     from: :broker,
     gzip: false,
-    only: ~w(assets fonts images favicon.ico robots.txt)
+    only: BrokerWeb.static_paths()
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

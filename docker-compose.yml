@@ -1,4 +1,4 @@
-version: "3.7"
+version: "3.8"
 services:
   broker:
     container_name: broker
@@ -9,7 +9,7 @@ services:
       - ./broker:/app
     hostname: broker
     networks:
-      - "live-net"
+      - "livebook"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -18,13 +18,13 @@ services:
     depends_on:
       - "db"
   livebook:
-    image: 'livebook/livebook:0.6.3' 
+    image: 'livebook/livebook:0.8.1' 
     container_name: livebook
     hostname: livebook
     ports:
       - '8432:8432'
     networks:
-      - "live-net"
+      - "livebook"
     environment:
       LIVEBOOK_COOKIE: "leruaite_secret"
       LIVEBOOK_TOKEN_ENABLED: "true"
@@ -42,7 +42,7 @@ services:
     ports:
       - '5432:5432'
     networks:
-      - "live-net"
+      - "livebook"
     restart: always
     environment:
       POSTGRES_HOST: livedb
@@ -55,6 +55,5 @@ services:
 
 
 networks:
-  live-net:
-    name: live-net
-    driver: bridge
+  livebook:
+    name: livebook

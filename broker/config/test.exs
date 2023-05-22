@@ -17,14 +17,17 @@ config :broker, Broker.Repo,
 # you can enable the server option below.
 config :broker, BrokerWeb.Endpoint,
   http: [ip: {127, 0, 0, 1}, port: 4002],
-  secret_key_base: "scXMRKtK+FF5I+4YwwE0oLc+HQs+NnIosC8AzUSIYU195mMtfM8fBYl01RL5v4Dm",
+  secret_key_base: "b1XVHYCiSuxZz3HMdhNnejvYv8pDvwxA2BINbWNLLgETNDQmfRDl09jAB3tPEW5k",
   server: false
 
 # In test we don't send emails.
 config :broker, Broker.Mailer, adapter: Swoosh.Adapters.Test
 
+# Disable swoosh api client as it is only required for production adapters.
+config :swoosh, :api_client, false
+
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :warning
 
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime

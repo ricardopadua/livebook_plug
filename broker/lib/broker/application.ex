@@ -8,12 +8,14 @@ defmodule Broker.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      Broker.Repo,
       # Start the Telemetry supervisor
       BrokerWeb.Telemetry,
+      # Start the Ecto repository
+      Broker.Repo,
       # Start the PubSub system
       {Phoenix.PubSub, name: Broker.PubSub},
+      # Start Finch
+      {Finch, name: Broker.Finch},
       # Start the Endpoint (http/https)
       BrokerWeb.Endpoint
       # Start a worker by calling: Broker.Worker.start_link(arg)
