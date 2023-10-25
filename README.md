@@ -32,4 +32,10 @@ or
 docker compose run broker mix deps.get docker compose run broker mix ecto.create && docker compose run broker mix ecto.migrate && docker compose up --build -d && docker exec -it broker iex --name broker@broker --cookie leruaite_secret -S mix
 ```
 
-This idea can be more explained in this livebook
+This idea can be more explained in this [livebook](https://github.com/ricardopadua/livebook_plug/blob/main/livebook/data/leruaite.livemd).
+
+![Peek 2023-10-25 15-42](https://github.com/ricardopadua/livebook_plug/assets/10750353/9fc00e45-1c02-4905-95cc-5e1c219e7ed1)
+
+Still don't know livebook ? read about [here](https://livebook.dev/).
+<br>
+Still don't know exdoc ? read about [here](https://hexdocs.pm/ex_doc/0.18.4/readme.html).
