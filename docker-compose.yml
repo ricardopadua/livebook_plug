@@ -40,7 +40,7 @@ services:
     container_name: livedb
     hostname: livedb
     ports:
-      - '5432:5432'
+      - '5431:5432'
     networks:
       - "livebook"
     restart: always

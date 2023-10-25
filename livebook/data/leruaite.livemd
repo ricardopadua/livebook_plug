@@ -20,14 +20,14 @@ Node.self()
 :broker@broker
 ```
 
-como exemplo fiz um simples select em um contexto de Persons criado em uma aplicação Phoenix
+To illustrate, I did a simple select in a context called Persons created in a phoenix application running on another host other than the livebook.
 
 <!-- livebook:{"break_markdown":true} -->
 
 ![](images/erlang_node.png)
 
 ```elixir
-Broker.Repo.get!(Broker.Persons.Person, 1)
+Broker.Repo.get!(Broker.Persons.Person, 2)
 ```
 
 <!-- livebook:{"output":true} -->
@@ -35,15 +35,15 @@ Broker.Repo.get!(Broker.Persons.Person, 1)
 ```
 %Broker.Persons.Person{
   __meta__: #Ecto.Schema.Metadata<:loaded, "persons">,
-  id: 1,
-  description: "owner",
-  name: "Lara ",
-  inserted_at: ~N[2023-05-20 14:53:42],
-  updated_at: ~N[2023-05-20 14:53:42]
+  id: 2,
+  description: "software engineer",
+  name: "Ricardo Pádua",
+  inserted_at: ~N[2023-10-25 18:04:25],
+  updated_at: ~N[2023-10-25 18:04:25]
 }
 ```
 
-é importante entender que caso não existe um node criado com o nome definido no host de destino, não será possível conectar.
+is important understand that if not exist node created with name defined to host, the connection will failure.
 
 <!-- livebook:{"break_markdown":true} -->
 
@@ -143,7 +143,7 @@ docker exec -it broker iex --name broker@broker --cookie leruaite_secret -S mix
 
 <!-- livebook:{"break_markdown":true} -->
 
-Observe que essa configuração é somente para exemplo e ajustes de segurança deverão ser feitos para que seja viavel rodar em ambientes de maneira segura, quando possível leia a documentação do livebook e sempre coloque suas variaveis de ambiente em um .env ou vault.
+Note that this configuration is for example only and security adjustments must be made so that it is viable to run in secure environments. When possible, read the livebook documentation and always place your environment variables in an .env or vault.
 
 <!-- livebook:{"break_markdown":true} -->
 
@@ -155,4 +155,4 @@ Observe que essa configuração é somente para exemplo e ajustes de segurança 
 
 <!-- livebook:{"break_markdown":true} -->
 
-também é possível salvar de maneira automagica essa documentação no repositório desejado.
+you can also auto save your livebook on repo.
